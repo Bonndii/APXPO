@@ -505,11 +505,11 @@ MonoBehaviour:
   WoodText: {fileID: 1966787896}
   IronText: {fileID: 1670316621}
   ArmyPowerText: {fileID: 664805387}
-  TotalGold: 10000
+  TotalGold: 2000
   GoldGain: 0
-  TotalWood: 10000
+  TotalWood: 0
   WoodGain: 0
-  TotalIron: 10000
+  TotalIron: 0
   IronGain: 0
   ArmyPower: 0
 --- !u!114 &104578892
