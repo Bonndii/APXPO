@@ -20,12 +20,14 @@ public class Battle : MonoBehaviour
     {
         if (Town.ArmyPower >= EnemyArmyPower) 
         {
+            Town.ArmyPower += EnemyArmyPower / 2;
             BattlesCanvas.SetActive(false);
             WinText.SetActive(true);
             StartCoroutine(FadeTextToZeroAlpha(1f, WinText.GetComponent<Text>()));
         }
         else
         {
+            Town.ArmyPower = 0;
             BattlesCanvas.SetActive(false);
             LoseText.SetActive(true);
             StartCoroutine(FadeTextToZeroAlpha(1f, LoseText.GetComponent<Text>()));
