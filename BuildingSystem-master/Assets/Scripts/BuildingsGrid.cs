@@ -107,10 +107,31 @@ public class BuildingsGrid : MonoBehaviour
                 {
                     if (grid[x, y] != null && Input.GetMouseButtonDown(0))
                     {
-                        grid[x, y].Upgrade(ref TotalGold, ref TotalWood, ref TotalIron, ref GoldGain, ref WoodGain, ref IronGain, ref ArmyPower);
+                        UpgradeBuilding(grid[x, y]);
                     }
-                    if (grid[x, y] != null && Input.GetMouseButtonDown(1))
+
+                    if (grid[x, y] != null && Input.GetMouseButtonDown(1) && grid[x,y].Type != Building.EType.TownHall)
                     {
+                        if (grid[x, y].Type != Building.EType.Tower)
+                        {
+                            GoldGain -= grid[x, y].GoldGain;
+                        }
+
+                        if (grid[x, y].Type == Building.EType.Sawmill)
+                        {
+                            WoodGain -= grid[x, y].WoodGain;
+                        }
+
+                        if (grid[x, y].Type == Building.EType.Forge)
+                        {
+                            IronGain -= grid[x, y].IronGain;
+                        }
+
+                        if (grid[x, y].Type == Building.EType.Tower)
+                        {
+                            ArmyPower -= grid[x, y].ArmyPower;
+                        }
+
                         Destroy(grid[x, y].gameObject);
                     }
                 }
@@ -151,13 +172,13 @@ public class BuildingsGrid : MonoBehaviour
             }
         }
 
-        if (flyingBuilding.Type != Building.EType.Tower) GoldGain += 5f;
+        if (flyingBuilding.Type != Building.EType.Tower) GoldGain += flyingBuilding.GoldGain;
         
-        if(flyingBuilding.Type == Building.EType.Sawmill) WoodGain += 4f;
+        if(flyingBuilding.Type == Building.EType.Sawmill) WoodGain += flyingBuilding.WoodGain;
 
-        if (flyingBuilding.Type == Building.EType.Forge) IronGain += 4f;
+        if (flyingBuilding.Type == Building.EType.Forge) IronGain += flyingBuilding.IronGain;
 
-        if (flyingBuilding.Type == Building.EType.Tower) ArmyPower += 200f;
+        if (flyingBuilding.Type == Building.EType.Tower) ArmyPower += flyingBuilding.ArmyPower;
 
         if (flyingBuilding.Type == Building.EType.TownHall) TownHallPresent = true;
 
@@ -179,5 +200,46 @@ public class BuildingsGrid : MonoBehaviour
             yield return null;
         }
         NotEnoughResources.SetActive(false);
+    }
+
+    public void UpgradeBuilding(Building building)
+    {
+        float goldUpgradePrice = building.GoldUpgradePrice.Evaluate(building.Level + 1);
+        float woodUpgradePrice = building.WoodUpgradePrice.Evaluate(building.Level + 1);
+        float ironUpgradePrice = building.IronUpgradePrice.Evaluate(building.Level + 1);
+
+        if (TotalGold >= goldUpgradePrice && TotalWood >= woodUpgradePrice && TotalIron >= ironUpgradePrice)
+        {
+            TotalGold -= goldUpgradePrice;
+            TotalWood -= woodUpgradePrice;
+            TotalIron -= ironUpgradePrice;
+
+            if (building.Type != Building.EType.Tower)
+            {
+                building.GoldGain += 3f;
+                GoldGain += 3f;
+            }
+
+            if (building.Type == Building.EType.Sawmill)
+            {
+                building.WoodGain += 2f;
+                WoodGain += 2f;
+            }
+
+            if (building.Type == Building.EType.Forge)
+            {
+                building.IronGain += 2f;
+                IronGain += 2f;
+            }
+
+            if (building.Type == Building.EType.Tower)
+            {
+                building.ArmyPower += 200f;
+                ArmyPower += 200f;
+            }
+
+            building.Level++;
+
+        }
     }
 }

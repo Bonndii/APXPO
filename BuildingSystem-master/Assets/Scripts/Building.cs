@@ -11,9 +11,15 @@ public class Building : MonoBehaviour
 
     public int Level = 1;
 
-    [SerializeField] private AnimationCurve GoldUpgradePrice;
-    [SerializeField] private AnimationCurve WoodUpgradePrice;
-    [SerializeField] private AnimationCurve IronUpgradePrice;
+    public AnimationCurve GoldUpgradePrice;
+    public AnimationCurve WoodUpgradePrice;
+    public AnimationCurve IronUpgradePrice;
+
+    public float GoldGain = 5f;
+    public float WoodGain = 4f;
+    public float IronGain = 4f;
+    public float ArmyPower = 200f;
+
     public enum EType
     {
         TownHall,
@@ -52,31 +58,6 @@ public class Building : MonoBehaviour
 
                 Gizmos.DrawCube(transform.position + new Vector3(x, 0, y), new Vector3(1, .1f, 1));
             }
-        }
-    }
-
-    public void Upgrade(ref float TotalGold, ref float TotalWood, ref float TotalIron, ref float GoldGain, ref float WoodGain, ref float IronGain, ref float ArmyPower)
-    {
-        float goldUpgradePrice = GoldUpgradePrice.Evaluate(Level + 1);
-        float woodUpgradePrice = WoodUpgradePrice.Evaluate(Level + 1);
-        float ironUpgradePrice = IronUpgradePrice.Evaluate(Level + 1);
-
-        if (TotalGold >= goldUpgradePrice && TotalWood >= woodUpgradePrice && TotalIron >= ironUpgradePrice)
-        {
-            TotalGold -= goldUpgradePrice;
-            TotalWood -= woodUpgradePrice;
-            TotalIron -= ironUpgradePrice;
-
-            if (Type != EType.Tower) GoldGain += 3f;
-
-            if (Type == EType.Sawmill) WoodGain += 2f;
-
-            if (Type == EType.Forge) IronGain += 2f;
-
-            if (Type == EType.Tower) ArmyPower += 200f;
-
-            Level++;
-
         }
     }
 }
